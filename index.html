@@ -1,0 +1,760 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A practical DevOps lab demonstrating Git version control, remote repositories and GitHub Pages deployment.">
+    <title>GitHub Pages Lab | DevOps</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --purple: #7655c9;
+            --purple-dark: #50349a;
+            --purple-light: #eee8ff;
+            --text: #29213e;
+            --muted: #77718a;
+            --white: #ffffff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 10% 10%, #e5d9ff 0, transparent 32%),
+                radial-gradient(circle at 90% 80%, #e6dcff 0, transparent 30%),
+                linear-gradient(135deg, #f8f6ff, #eee9fa);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: min(1100px, 90%);
+            margin: auto;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 17px 0;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--purple-dark);
+        }
+
+        .logo span {
+            color: var(--purple);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 27px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .nav-links a:hover {
+            color: var(--purple);
+        }
+
+        .nav-button {
+            background: var(--purple);
+            color: white !important;
+            padding: 10px 17px;
+            border-radius: 9px;
+        }
+
+        .hero {
+            padding: 95px 0 75px;
+            text-align: center;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 8px 15px;
+            border: 1px solid rgba(118,85,201,0.2);
+            border-radius: 30px;
+            color: var(--purple-dark);
+            background: rgba(255,255,255,0.55);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 6vw, 62px);
+            line-height: 1.12;
+            letter-spacing: -2px;
+            font-weight: 800;
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .hero h1 span {
+            color: var(--purple);
+        }
+
+        .hero p {
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.8;
+            max-width: 620px;
+            margin: 23px auto 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 13px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 13px 21px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: 0.25s ease;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .button-primary {
+            background: var(--purple);
+            color: white;
+            box-shadow: 0 7px 20px rgba(118,85,201,0.23);
+        }
+
+        .button-primary:hover {
+            background: var(--purple-dark);
+            transform: translateY(-3px);
+        }
+
+        .button-secondary {
+            background: rgba(255,255,255,0.65);
+            border: 1px solid rgba(118,85,201,0.18);
+            color: var(--purple-dark);
+        }
+
+        .button-secondary:hover {
+            background: white;
+            transform: translateY(-3px);
+        }
+
+        .glass {
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.85);
+            box-shadow: 0 12px 35px rgba(69,45,112,0.07);
+            border-radius: 18px;
+        }
+
+        .overview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 17px;
+            margin-bottom: 85px;
+        }
+
+        .overview-card {
+            padding: 24px;
+            transition: 0.3s ease;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(69,45,112,0.12);
+        }
+
+        .icon {
+            width: 43px;
+            height: 43px;
+            display: grid;
+            place-items: center;
+            background: var(--purple-light);
+            border-radius: 12px;
+            font-size: 20px;
+            margin-bottom: 17px;
+        }
+
+        .overview-card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .overview-card p {
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--muted);
+        }
+
+        section {
+            padding: 25px 0 65px;
+            scroll-margin-top: 85px;
+        }
+
+        .section-heading {
+            margin-bottom: 27px;
+        }
+
+        .section-heading small {
+            color: var(--purple);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.7px;
+            text-transform: uppercase;
+        }
+
+        .section-heading h2 {
+            font-size: 29px;
+            margin-top: 9px;
+            letter-spacing: -0.7px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: 9px;
+            line-height: 1.7;
+        }
+
+        .workflow {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 13px;
+        }
+
+        .workflow-card {
+            padding: 20px;
+            transition: 0.25s;
+        }
+
+        .workflow-card:hover {
+            transform: translateY(-4px);
+            border-color: #c8b6f2;
+        }
+
+        .step-number {
+            color: var(--purple);
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 13px;
+        }
+
+        .workflow-card h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .workflow-card p {
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .detail-card {
+            padding: 27px;
+        }
+
+        .detail-card h3 {
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        .detail-card p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .detail-list {
+            list-style: none;
+        }
+
+        .detail-list li {
+            display: flex;
+            gap: 11px;
+            align-items: flex-start;
+            margin: 13px 0;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .check {
+            color: var(--purple);
+            font-weight: 800;
+        }
+
+        .code-card {
+            background: #29213e;
+            color: #eee8ff;
+            border-radius: 15px;
+            padding: 23px;
+            overflow-x: auto;
+            margin-top: 18px;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 17px;
+            color: #c6b5ef;
+            font-size: 12px;
+        }
+
+        .code-card pre {
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            line-height: 1.9;
+            white-space: pre-wrap;
+        }
+
+        .copy-button {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            padding: 7px 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .copy-button:hover {
+            background: rgba(255,255,255,0.22);
+        }
+
+        .learning-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 13px;
+        }
+
+        .learning-card {
+            padding: 19px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .learning-card span {
+            font-size: 20px;
+        }
+
+        .deployment {
+            text-align: center;
+            padding: 40px 25px;
+        }
+
+        .deployment h2 {
+            font-size: 25px;
+            margin-bottom: 12px;
+        }
+
+        .deployment p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            max-width: 520px;
+            margin: 0 auto 22px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding: 28px 0;
+            text-align: center;
+            border-top: 1px solid rgba(118,85,201,0.12);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .footer strong {
+            color: var(--purple-dark);
+        }
+
+        @media(max-width: 750px) {
+            .nav-links {
+                gap: 12px;
+                font-size: 11px;
+            }
+
+            .nav-links a:not(.nav-button) {
+                display: none;
+            }
+
+            .overview {
+                grid-template-columns: 1fr;
+                margin-bottom: 55px;
+            }
+
+            .workflow {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 70px 0 55px;
+            }
+
+            .hero h1 {
+                letter-spacing: -1px;
+            }
+        }
+
+        @media(max-width: 420px) {
+            .workflow {
+                grid-template-columns: 1fr;
+            }
+
+            .learning-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-heading h2 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo">DevOps<span>.</span>Lab</a>
+
+            <div class="nav-links">
+                <a href="#overview">Overview</a>
+                <a href="#workflow">Workflow</a>
+                <a href="#learning">Learning</a>
+                <a href="#deployment" class="nav-button">GitHub Pages ↗</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero container">
+        <div class="tag">DEVOPS TOOLS & TECHNOLOGIES · WEEK 02</div>
+
+        <h1>Working with Remote Repositories & <span>GitHub Pages</span></h1>
+
+        <p>
+            A practical demonstration of Git version control,
+            remote repository management and deploying a static
+            website using GitHub Pages.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="#workflow" class="button button-primary">
+                Explore the Workflow →
+            </a>
+
+            <a href="https://github.com/Poornimachavan86/github-pages-lab"
+               target="_blank" rel="noopener noreferrer"
+               class="button button-secondary">
+                View Repository ↗
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <div class="overview" id="overview">
+
+            <article class="glass overview-card">
+                <div class="icon">⌘</div>
+                <h3>Git Version Control</h3>
+                <p>
+                    Track project changes, maintain version history
+                    and manage source code efficiently.
+                </p>
+            </article>
+
+            <article class="glass overview-card">
+                <div class="icon">☁</div>
+                <h3>Remote Repository</h3>
+                <p>
+                    Connect a local Git repository with GitHub
+                    to store and share project files.
+                </p>
+            </article>
+
+            <article class="glass overview-card">
+                <div class="icon">◈</div>
+                <h3>GitHub Pages</h3>
+                <p>
+                    Publish a static HTML website online
+                    using GitHub's free hosting service.
+                </p>
+            </article>
+
+        </div>
+
+        <section id="workflow">
+
+            <div class="section-heading">
+                <small>Practical implementation</small>
+                <h2>Git Deployment Workflow</h2>
+                <p>
+                    The major steps involved in creating,
+                    managing and publishing the website.
+                </p>
+            </div>
+
+            <div class="workflow">
+
+                <article class="glass workflow-card">
+                    <div class="step-number">01 / SETUP</div>
+                    <h3>Create Repository</h3>
+                    <p>Create a public repository on GitHub
+                    for storing the project.</p>
+                </article>
+
+                <article class="glass workflow-card">
+                    <div class="step-number">02 / LOCAL</div>
+                    <h3>Initialize Git</h3>
+                    <p>Create a local project folder
+                    and initialize Git tracking.</p>
+                </article>
+
+                <article class="glass workflow-card">
+                    <div class="step-number">03 / DEVELOP</div>
+                    <h3>Create Webpage</h3>
+                    <p>Develop the webpage using HTML
+                    and save it as index.html.</p>
+                </article>
+
+                <article class="glass workflow-card">
+                    <div class="step-number">04 / STAGE</div>
+                    <h3>Add Files</h3>
+                    <p>Use Git commands to add project
+                    files to the staging area.</p>
+                </article>
+
+                <article class="glass workflow-card">
+                    <div class="step-number">05 / COMMIT</div>
+                    <h3>Commit Changes</h3>
+                    <p>Save a snapshot of the project
+                    with a meaningful commit message.</p>
+                </article>
+
+                <article class="glass workflow-card">
+                    <div class="step-number">06 / CONNECT</div>
+                    <h3>Link Repository</h3>
+                    <p>Connect the local repository
+                    to the remote GitHub repository.</p>
+                </article>
+
+                <article class="glass workflow-card">
+                    <div class="step-number">07 / PUSH</div>
+                    <h3>Upload Files</h3>
+                    <p>Push committed files to GitHub
+                    using the main branch.</p>
+                </article>
+
+                <article class="glass workflow-card">
+                    <div class="step-number">08 / DEPLOY</div>
+                    <h3>Publish Website</h3>
+                    <p>Enable GitHub Pages and access
+                    the website through its public URL.</p>
+                </article>
+
+            </div>
+        </section>
+
+        <section>
+
+            <div class="section-heading">
+                <small>Core concepts</small>
+                <h2>Understanding the Experiment</h2>
+                <p>
+                    Important concepts and tools used during
+                    the practical implementation.
+                </p>
+            </div>
+
+            <div class="details-grid">
+
+                <article class="glass detail-card">
+                    <h3>Tools & Technologies</h3>
+
+                    <ul class="detail-list">
+                        <li><span class="check">✓</span> Git – Distributed version control system.</li>
+                        <li><span class="check">✓</span> GitHub – Cloud-based repository hosting platform.</li>
+                        <li><span class="check">✓</span> HTML5 – Structure of the webpage.</li>
+                        <li><span class="check">✓</span> GitHub Pages – Static website hosting.</li>
+                        <li><span class="check">✓</span> Web Browser – Accessing the deployed website.</li>
+                    </ul>
+                </article>
+
+                <article class="glass detail-card">
+                    <h3>Important Git Commands</h3>
+
+                    <ul class="detail-list">
+                        <li><span class="check">01</span> git init – Initialize repository.</li>
+                        <li><span class="check">02</span> git status – Check file status.</li>
+                        <li><span class="check">03</span> git add . – Stage project files.</li>
+                        <li><span class="check">04</span> git commit – Save changes.</li>
+                        <li><span class="check">05</span> git push – Upload files to GitHub.</li>
+                    </ul>
+                </article>
+
+            </div>
+
+            <div class="code-card">
+                <div class="code-header">
+                    <span>TERMINAL · GIT COMMANDS</span>
+                    <button class="copy-button" onclick="copyCommands()">
+                        Copy Commands
+                    </button>
+                </div>
+
+                <pre id="commands">git init
+git status
+git add .
+git commit -m "Added initial web page"
+git remote add origin https://github.com/Poornimachavan86/github-pages-lab.git
+git branch -M main
+git push -u origin main</pre>
+            </div>
+
+        </section>
+
+        <section id="learning">
+
+            <div class="section-heading">
+                <small>Experiment outcomes</small>
+                <h2>What This Lab Covers</h2>
+                <p>
+                    Practical skills gained through the experiment.
+                </p>
+            </div>
+
+            <div class="learning-grid">
+
+                <div class="glass learning-card">
+                    <span>⌘</span>
+                    <div>Git operations and version control</div>
+                </div>
+
+                <div class="glass learning-card">
+                    <span>☁</span>
+                    <div>Local and remote repository synchronization</div>
+                </div>
+
+                <div class="glass learning-card">
+                    <span>⌨</span>
+                    <div>Basic HTML webpage development</div>
+                </div>
+
+                <div class="glass learning-card">
+                    <span>◈</span>
+                    <div>Static website deployment using GitHub Pages</div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="deployment">
+
+            <div class="glass deployment">
+                <div class="tag">PROJECT REPOSITORY</div>
+
+                <h2>Explore the GitHub Repository</h2>
+
+                <p>
+                    This project demonstrates the use of Git
+                    and GitHub Pages to manage and publish
+                    a simple static website.
+                </p>
+
+                <a href="https://github.com/Poornimachavan86/github-pages-lab"
+                   target="_blank" rel="noopener noreferrer"
+                   class="button button-primary">
+                    Visit GitHub Repository ↗
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>Created as part of <strong>DevOps Tools & Technologies</strong></p>
+            <p style="margin-top:8px;">
+                Week 02 · Working with Remote Repositories and GitHub Pages
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        function copyCommands() {
+            const commands = document.getElementById("commands").innerText;
+            const button = document.querySelector(".copy-button");
+
+            navigator.clipboard.writeText(commands).then(() => {
+                button.textContent = "Copied!";
+                setTimeout(() => {
+                    button.textContent = "Copy Commands";
+                }, 2000);
+            }).catch(() => {
+                button.textContent = "Copy unavailable";
+            });
+        }
+    </script>
+
+</body>
+</html>
